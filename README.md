@@ -1,5 +1,8 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## About This Project
+The purpose of this project serves to brushen up my React skills and become familiar with the [Unsplash API](https://unsplash.com/developers). This simple web app will allow for a user to select a color with an [HTML Color Picker Form Element](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/color) and then a grid of images with that color in it will populate from the Unsplash API.
+
 ## Available Scripts
 
 In the project directory, you can run:

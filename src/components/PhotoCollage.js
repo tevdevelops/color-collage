@@ -1,4 +1,5 @@
 import React, {Component} from 'react'
+import namer from 'color-namer'
 // import PhotoGrid from './PhotoGrid'
 import PhotoItem from './PhotoItem'
 
@@ -14,45 +15,50 @@ class PhotoCollage extends Component {
         super()
         
         this.state = {
-            colorPicker: "#e66465",
+            colorPicker: "#000000",
             imgArray: []
         }
     }
 
-    handleChange = event => {
-        const {name, value} = event.target
-
-        this.setState({ [name]: value })
+    searchPhotos() {
+        let colorName = namer(this.state.colorPicker).pantone[0].name
+        console.log(colorName)
+        unsplash.search.photos(colorName, 1)
+            .then(response => response.json())
+            .then(response => {
+                this.setState({ imgArray: response.results })
+            }) 
     }
 
-    handleSubmit = event => {
-        event.preventDefault()
-        console.log("Should Change Image Collage")
+    handleChange = event => {
+        const {name, value} = event.target
+            this.setState({ [name]: value })
     }
 
     componentDidMount() {
-        unsplash.photos.listPhotos(2, 15, "latest")
-            .then(response => response.json())
-            .then(response => {
-                this.setState({ imgArray: response })
-            });    
+        this.searchPhotos()
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (prevState.colorPicker !== this.state.colorPicker) {
+            this.searchPhotos()
+        }
+        
     }
 
     render() {
-        const photoItems = this.state.imgArray.map(item => <PhotoItem source={item.urls.small} alt={item.user.first_name} />)
+        const photoItems = this.state.imgArray.map(item => <PhotoItem key={item.id} source={item.urls.small} alt={item.user.first_name} />)
 
         return(
             <div>
-                <form onSubmit={this.handleSubmit}>
-                    <input 
-                        type="color" 
-                        name="colorPicker" 
-                        value={this.state.color} 
-                        onChange={this.handleChange}
-                    />
-                    <button>Generate</button>
-                </form>
-                <p>Your Selected Color: {this.state.colorPicker}</p>
+
+                <input 
+                    type="color" 
+                    name="colorPicker" 
+                    value={this.state.color} 
+                    onChange={this.handleChange}
+                />
+                <p>Your Selected Color: {namer(this.state.colorPicker).pantone[0].name}</p>
             
                 {/*<PhotoGrid />*/}
                 <div>

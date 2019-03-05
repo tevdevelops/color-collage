@@ -1,9 +1,11 @@
 import React, {Component} from 'react'
 import namer from 'color-namer'
-// import PhotoGrid from './PhotoGrid'
-import PhotoItem from './PhotoItem'
-
 import Unsplash from 'unsplash-js'
+import PhotoItem from './PhotoItem'
+import Loader from './Loader'
+import './PhotoCollage.css'
+
+
 
 const unsplash = new Unsplash({
     applicationId: "3c52afac6f4778aad50202e7ccdd5cba4213e4dba97564b655653f566107b734",
@@ -16,17 +18,19 @@ class PhotoCollage extends Component {
         
         this.state = {
             colorPicker: "#000000",
-            imgArray: []
+            imgArray: [],
+            isLoading: false
         }
     }
 
     searchPhotos() {
+        this.setState({ isLoading: true })
         let colorName = namer(this.state.colorPicker).pantone[0].name
         console.log(colorName)
         unsplash.search.photos(colorName, 1)
             .then(response => response.json())
             .then(response => {
-                this.setState({ imgArray: response.results })
+                this.setState({ imgArray: response.results, isLoading: false })
             }) 
     }
 
@@ -47,26 +51,32 @@ class PhotoCollage extends Component {
     }
 
     render() {
-        const photoItems = this.state.imgArray.map(item => <PhotoItem key={item.id} source={item.urls.small} alt={item.user.first_name} />)
+        const photoItems = this.state.imgArray.map(item => <PhotoItem key={item.id} source={item.urls.small} link={item.links.html} alt={item.user.first_name} />)
 
         return(
             <div>
 
-                <input 
-                    type="color" 
-                    name="colorPicker" 
-                    value={this.state.color} 
-                    onChange={this.handleChange}
-                />
-                <p>Your Selected Color: {namer(this.state.colorPicker).pantone[0].name}</p>
-            
-                {/*<PhotoGrid />*/}
-                <div>
-                    {photoItems}
+                <div className="color-picker">
+                    <input 
+                        type="color" 
+                        name="colorPicker" 
+                        value={this.state.colorPicker} 
+                        onChange={this.handleChange}
+                    />
+                    <span>Your Selected Color: {namer(this.state.colorPicker).pantone[0].name}</span>
                 </div>
 
+                {
+                    this.state.isLoading ?
+                        <Loader />
+                    :
+                    <div className="photo-grid slide-up-fade-in">
+                        {photoItems}
+                        <div className="clearfix"></div>
+                    </div>
+                }
+
             </div>
-            
         )
     }
 }

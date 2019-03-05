@@ -3,6 +3,11 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 ## About This Project
 The purpose of this project serves to brushen up my React skills and become familiar with the [Unsplash API](https://unsplash.com/developers). This simple web app will allow for a user to select a color with an [HTML Color Picker Form Element](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/color) and then a grid of images with that color in it will populate from the Unsplash API.
 
+### After completion of firt iteration:
+I initially intended to use the color metadata of Unsplash's images, but there is no current way to request photos based on this color data. So I had to use a [color namer library](https://github.com/colorjs/color-namer) to translate the hex code from the form input into the closest Pantone Name. I then used this term to search through the Unsplash library. 
+
+The effect still looks pretty good and close to how I imagined. In future iterations, I may use a different Photo API such as Shutterstock. Feel free to make any recommendations!
+
 ## Available Scripts
 
 In the project directory, you can run:
